@@ -45,3 +45,62 @@ exports.first = function (array, length) {
 
   return array.shift();
 };
+
+// _.last(array, [n])
+ //
+// Returns the last element of an array. Passing n will return the last n elements of the array.
+
+// _.last([5, 4, 3, 2, 1]);
+// => 1
+
+exports.last = function (array, length) {
+  if (!Array.isArray(array)) {
+    throw new Error('Invalid Parameter');
+  }
+
+  if (length > 1) {
+    var elements = [];
+
+    length = length > array.length ? array.length : length;
+
+    for (var i = 0; i < length; i++) {
+      elements.push(array.pop());
+    }
+
+    return elements;
+  }
+
+  return array.pop();
+};
+
+// _.each(list, iteratee, [context])
+//
+// Iterates over a list of elements, yielding each in turn to an iteratee function.
+// The iteratee is bound to the context object, if one is passed. Each invocation
+// of iteratee is called with three arguments: (element, index, list). If list is a
+// JavaScript object, iteratee's arguments will be (value, key, list).
+// Returns the list for chaining.
+
+// _.each([1, 2, 3], alert);
+// => alerts each number in turn...
+// _.each({one: 1, two: 2, three: 3}, alert);
+// => alerts each number value in turn...
+
+exports.each = function (list, cb) {
+  if (Array.isArray(list)) {
+    for (var i = 0; i < list.length; i++) {
+      cb(list[i], i, list);
+    }
+  } else if (typeof list === 'object') {
+    for (var key in list) {
+      cb(list[key], key, list);
+    }
+  }
+};
+
+
+
+
+
+
+

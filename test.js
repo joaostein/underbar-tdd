@@ -4,6 +4,7 @@
 
 var chai = require('chai');
 var expect = chai.expect;
+var sinon = require('sinon');
 var _ = require('./underbar');
 
 
@@ -64,4 +65,79 @@ describe('#first()', function () {
     expect(function () { _.first(1); }).to.throw();
     expect(function () { _.first('string'); }).to.throw();
   });
+});
+
+describe('#last()', function () {
+  var myArray;
+
+  beforeEach(function () {
+    myArray = [1, 2, 3];
+  });
+
+  it('should return the last element of array', function () {
+    expect(_.last(myArray)).to.equal(3);
+  });
+
+  it('should return the last `n` elements of array', function () {
+    expect(_.last(myArray, 2)).to.deep.equal([3, 2]);
+  });
+
+  it('should return the last element with `n` equals one', function () {
+    expect(_.last(myArray, 1)).to.equal(3);
+  });
+
+  it('should return the last element with `n` equals zero', function () {
+    expect(_.last(myArray, 0)).to.equal(3);
+  });
+
+  it('should return all elements when `n` greater than array length', function () {
+    expect(_.last(myArray, 100)).to.deep.equal([3, 2, 1]);
+  });
+
+  it('should only accept arrays as first parameters', function () {
+    expect(function () { _.first(false); }).to.throw();
+    expect(function () { _.first(undefined); }).to.throw();
+    expect(function () { _.first(null); }).to.throw();
+    expect(function () { _.first({}); }).to.throw();
+    expect(function () { _.first(1); }).to.throw();
+    expect(function () { _.first('string'); }).to.throw();
+  });
+});
+
+describe('#each()', function () {
+  var array = [1, 2];
+  var obj = { key: 'value', key1: 'value1' };
+  var sandbox;
+
+  beforeEach(function () {
+    sandbox = sinon.sandbox.create();
+    sandbox.callback = sinon.spy();
+  });
+
+  afterEach(function () {
+    sandbox.restore();
+  });
+
+  it('should iterate an array', function () {
+    _.each(array, sandbox.callback);
+    expect(sandbox.callback.callCount).to.equal(2);
+  });
+
+  it('should invoke sandbox.callback with element, index and list parameters on array', function () {
+    _.each(array, sandbox.callback);
+    expect(sandbox.callback.calledWith(1, 0, array)).to.equal(true);
+    expect(sandbox.callback.calledWith(2, 1, array)).to.equal(true);
+  });
+
+  it('should iterate an object', function () {
+    _.each(obj, sandbox.callback);
+    expect(sandbox.callback.callCount).to.equal(2);
+  });
+
+  it('should invoke sandbox.callback with element, index and list parameters on object', function () {
+    _.each(obj, sandbox.callback);
+    expect(sandbox.callback.calledWith('value', 'key', obj)).to.equal(true);
+    expect(sandbox.callback.calledWith('value1', 'key1', obj)).to.equal(true);
+  });
+
 });
