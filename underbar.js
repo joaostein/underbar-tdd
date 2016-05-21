@@ -122,3 +122,23 @@ exports.indexOf = function (array, value) {
 
   return position;
 };
+
+// _.filter(collection, predicate)
+//
+// Looks through each value in the list, returning an array of all the values
+// that pass a truth test (predicate).
+
+// var evens = _.filter([1, 2, 3, 4, 5, 6], function(num){ return num % 2 == 0; });
+// => [2, 4, 6]
+
+exports.filter = function (collection, predicate) {
+  var filteredCollection = [];
+
+  this.each(collection, function (item) {
+    if (predicate(item)) {
+      filteredCollection.push(item);
+    }
+  });
+
+  return filteredCollection;
+};

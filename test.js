@@ -168,3 +168,52 @@ describe('#indexOf()', function () {
     expect(_.indexOf(myArray, 101)).to.equal(-1);
   });
 });
+
+describe('#filter()', function () {
+  var predicate1 = function (value) {
+    return value >= 3;
+  };
+
+  var predicate2 = function (value) {
+    return value % 2 === 0;
+  };
+
+  it('should exist', function () {
+    expect(_).to.respondTo('filter');
+  });
+
+  it('should return an empty array on invalid collections', function () {
+    expect(_.filter()).to.deep.equal([]);
+    expect(_.filter(false)).to.deep.equal([]);
+    expect(_.filter(undefined)).to.deep.equal([]);
+    expect(_.filter(null)).to.deep.equal([]);
+    expect(_.filter('string')).to.deep.equal([]);
+    expect(_.filter(1)).to.deep.equal([]);
+  });
+
+  it('should execute the predicate callback function for each item in array', function () {
+    var collection = [1, 2, 3];
+    var spy = sinon.spy();
+    _.filter(collection, spy);
+    expect(spy.callCount).to.equal(collection.length);
+  });
+
+  it('should execute the predicate callback function for each item in object', function () {
+    var collection = { item1: 1, item2: 2, item3: 3 };
+    var spy = sinon.spy();
+    _.filter(collection, spy);
+    expect(spy.callCount).to.equal(Object.keys(collection).length);
+  });
+
+  it('should return an array with elements that match predicate using array collection', function () {
+    var collection = [1, 2, 3, 4];
+    expect(_.filter(collection, predicate2)).to.deep.equal([2, 4]);
+    expect(_.filter(collection, predicate1)).to.deep.equal([3, 4]);
+  });
+
+  it('should return an array with elements that match predicate using object collection', function () {
+    var collection = { item1: 1, item2: 2, item3: 3, item4: 4 };
+    expect(_.filter(collection, predicate2)).to.deep.equal([2, 4]);
+    expect(_.filter(collection, predicate1)).to.deep.equal([3, 4]);
+  });
+});
