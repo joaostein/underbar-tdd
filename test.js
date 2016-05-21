@@ -139,5 +139,32 @@ describe('#each()', function () {
     expect(sandbox.callback.calledWith('value', 'key', obj)).to.equal(true);
     expect(sandbox.callback.calledWith('value1', 'key1', obj)).to.equal(true);
   });
+});
 
+describe('#indexOf()', function () {
+  var myArray = [0, 1, 2, 3, 4];
+
+  it('should exist', function () {
+    expect(_).to.respondTo('indexOf');
+  });
+
+  it('should only accept arrays', function () {
+    expect(function () { _.indexOf({}); }).to.throw();
+    expect(function () { _.indexOf(''); }).to.throw();
+    expect(function () { _.indexOf(1); }).to.throw();
+    expect(function () { _.indexOf(undefined); }).to.throw();
+    expect(function () { _.indexOf(null); }).to.throw();
+  });
+
+  it('should return the position of given element', function () {
+    expect(_.indexOf(myArray, 0)).to.equal(0);
+    expect(_.indexOf(myArray, 1)).to.equal(1);
+    expect(_.indexOf(myArray, 2)).to.equal(2);
+    expect(_.indexOf(myArray, 3)).to.equal(3);
+    expect(_.indexOf(myArray, 4)).to.equal(4);
+  });
+
+  it('should return -1 if element not found', function () {
+    expect(_.indexOf(myArray, 101)).to.equal(-1);
+  });
 });

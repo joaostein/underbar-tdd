@@ -98,9 +98,27 @@ exports.each = function (list, cb) {
   }
 };
 
+// _.indexOf(array, value)
+//
+// Returns the index at which value can be found in the array, or -1 if value
+// is not present in the array.
 
+// _.indexOf([1, 2, 3], 2);
+// => 1
 
+exports.indexOf = function (array, value) {
+  if (!Array.isArray(array)) {
+    throw new Error('Collection must be an array.');
+  }
 
+  var position = -1;
 
+  for (var i = 0; i < array.length; i++) {
+    if (array[i] === value) {
+      position = i;
+      break;
+    }
+  }
 
-
+  return position;
+};
