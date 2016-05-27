@@ -182,6 +182,24 @@ describe('Filters', function () {
   var objectCollection = { item1: 1, item2: 2, item3: 3, item4: 4 };
   var spy = sinon.spy();
 
+  describe('#_filter()', function () {
+    it('should exist', function () {
+      expect(_).to.respondTo('_filter');
+    });
+
+    it('should execute the predicate callback function for each item in array', function () {
+      _._filter(arrayCollection, spy);
+      expect(spy.callCount).to.equal(arrayCollection.length);
+      spy.reset();
+    });
+
+    it('should execute the predicate callback function for each item in object', function () {
+      _._filter(objectCollection, spy);
+      expect(spy.callCount).to.equal(Object.keys(objectCollection).length);
+      spy.reset();
+    });
+  });
+
   describe('#filter()', function () {
     it('should exist', function () {
       expect(_).to.respondTo('filter');
@@ -194,18 +212,6 @@ describe('Filters', function () {
       expect(_.filter(null)).to.deep.equal([]);
       expect(_.filter('string')).to.deep.equal([]);
       expect(_.filter(1)).to.deep.equal([]);
-    });
-
-    it('should execute the predicate callback function for each item in array', function () {
-      _.filter(arrayCollection, spy);
-      expect(spy.callCount).to.equal(arrayCollection.length);
-      spy.reset();
-    });
-
-    it('should execute the predicate callback function for each item in object', function () {
-      _.filter(objectCollection, spy);
-      expect(spy.callCount).to.equal(Object.keys(objectCollection).length);
-      spy.reset();
     });
 
     it('should return an array with elements that match predicate using array collection', function () {
@@ -224,25 +230,13 @@ describe('Filters', function () {
       expect(_).to.respondTo('reject');
     });
 
-    it('should return an empty array on invalid argument', function () {
+    it('should return an empty array on invalid collections', function () {
       expect(_.reject()).to.deep.equal([]);
       expect(_.reject(false)).to.deep.equal([]);
       expect(_.reject(undefined)).to.deep.equal([]);
       expect(_.reject(null)).to.deep.equal([]);
       expect(_.reject('string')).to.deep.equal([]);
       expect(_.reject(1)).to.deep.equal([]);
-    });
-
-    it('should execute the predicate callback function for each item in array', function () {
-      _.reject(arrayCollection, spy);
-      expect(spy.callCount).to.equal(arrayCollection.length);
-      spy.reset();
-    });
-
-    it('should execute the predicate callback function for each item in object', function () {
-      _.reject(objectCollection, spy);
-      expect(spy.callCount).to.equal(Object.keys(objectCollection).length);
-      spy.reset();
     });
 
     it('should return an array with elements that does not match predicate using array collection', function () {

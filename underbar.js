@@ -132,15 +132,7 @@ exports.indexOf = function (array, value) {
 // => [2, 4, 6]
 
 exports.filter = function (collection, predicate) {
-  var filteredCollection = [];
-
-  this.each(collection, function (item) {
-    if (predicate(item)) {
-      filteredCollection.push(item);
-    }
-  });
-
-  return filteredCollection;
+  return this._filter(collection, predicate, 'filter');
 };
 
 // _.reject(list, predicate, [context])
@@ -151,10 +143,19 @@ exports.filter = function (collection, predicate) {
 // => [1, 3, 5]
 
 exports.reject = function (collection, predicate) {
+  return this._filter(collection, predicate, 'reject');
+};
+
+
+exports._filter = function (collection, predicate, operation) {
   var filteredCollection = [];
+  var test;
 
   this.each(collection, function (item) {
-    if (!predicate(item)) {
+    test = predicate(item);
+    test = (operation === 'filter') ? test : !test;
+
+    if (test) {
       filteredCollection.push(item);
     }
   });
