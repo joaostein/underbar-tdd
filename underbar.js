@@ -135,7 +135,7 @@ exports.filter = function (collection, predicate) {
   return this._filter(collection, predicate, 'filter');
 };
 
-// _.reject(list, predicate, [context])
+// _.reject(list, predicate)
 // Returns the values in list without the elements that the truth test (predicate)
 // passes. The opposite of filter.
 
@@ -161,4 +161,27 @@ exports._filter = function (collection, predicate, operation) {
   });
 
   return filteredCollection;
+};
+
+// _.uniq(array)
+// Produces a duplicate-free version of the array, using === to test object equality.
+// In particular only the first occurence of each value is kept.
+
+// _.uniq([1, 2, 1, 4, 1, 3]);
+// => [1, 2, 4, 3]
+
+exports.uniq = function (collection) {
+  if (!Array.isArray(collection)) {
+    throw new Error('Collection must be an array.');
+  }
+
+  var uniq = [];
+
+  this.each(collection, function (item, index, collection) {
+    if (uniq.indexOf(item) === -1) {
+      uniq.push(item);
+    }
+  });
+
+  return uniq;
 };

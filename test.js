@@ -8,6 +8,19 @@ var sinon = require('sinon');
 var _ = require('./underbar');
 
 
+var predicate1 = function (value) {
+  return value >= 3;
+};
+
+var predicate2 = function (value) {
+  return value % 2 === 0;
+};
+
+var arrayCollection = [1, 2, 3, 4];
+var objectCollection = { item1: 1, item2: 2, item3: 3, item4: 4 };
+var spy = sinon.spy();
+
+
 describe('#identity()', function () {
   it('return the same value', function () {
     expect(_.identity(1)).to.equal(1);
@@ -170,18 +183,6 @@ describe('#indexOf()', function () {
 });
 
 describe('Filters', function () {
-  var predicate1 = function (value) {
-    return value >= 3;
-  };
-
-  var predicate2 = function (value) {
-    return value % 2 === 0;
-  };
-
-  var arrayCollection = [1, 2, 3, 4];
-  var objectCollection = { item1: 1, item2: 2, item3: 3, item4: 4 };
-  var spy = sinon.spy();
-
   describe('#_filter()', function () {
     it('should exist', function () {
       expect(_).to.respondTo('_filter');
@@ -248,5 +249,41 @@ describe('Filters', function () {
       expect(_.reject(objectCollection, predicate2)).to.deep.equal([1, 3]);
       expect(_.reject(objectCollection, predicate1)).to.deep.equal([1, 2]);
     });
+  });
+});
+
+describe('#uniq()', function () {
+  it('should exist', function () {
+    expect(_).to.respondTo('uniq');
+  });
+
+  it('should throw an error if invalid argument', function () {
+    expect(function () { _.uniq(false); }).to.throw();
+    expect(function () { _.uniq(undefined); }).to.throw();
+    expect(function () { _.uniq(null); }).to.throw();
+    expect(function () { _.uniq({}); }).to.throw();
+    expect(function () { _.uniq(1); }).to.throw();
+    expect(function () { _.uniq('string'); }).to.throw();
+  });
+
+  it('should return a different array', function () {
+    var uniq = _.uniq(arrayCollection);
+    expect(uniq).to.be.an('array');
+    expect(uniq).to.not.equal(arrayCollection);
+  });
+
+  it('should return an identical array if given array is already uniq', function() {
+    var uniq = _.uniq(arrayCollection);
+    expect(uniq).to.deep.equal(arrayCollection);
+  });
+
+  it('should return an uniq array if given array is not uniq', function () {
+    var uniq = _.uniq([1, 2, 1, 4, 1, 3]);
+    expect(uniq).to.deep.equal([1, 2, 4, 3]);
+  });
+
+  it('should return uniq array with any kind of data contained in array', function () {
+    var uniq = _.uniq(['str', null, undefined, false, false, undefined, 'str3', 'str']);
+    expect(uniq).to.deep.equal(['str', null, undefined, false, 'str3']);
   });
 });
