@@ -188,7 +188,7 @@ exports.uniq = function (collection) {
   return uniq;
 };
 
-// _.map(list, iteratee, [context])
+// _.map(list, iteratee)
 //
 // Produces a new array of values by mapping each value in list through
 // a transformation function (iteratee). The iteratee is passed three arguments:
@@ -212,4 +212,23 @@ exports.map = function (collection, iteratee) {
   });
 
   return mappedArray;
+};
+
+// _.pluck(list, propertyName)
+//
+// A convenient version of what is perhaps the most common use-case for map:
+// extracting a list of property values.
+//
+// var stooges = [{name: 'moe', age: 40}, {name: 'larry', age: 50}, {name: 'curly', age: 60}];
+// _.pluck(stooges, 'name');
+// => ["moe", "larry", "curly"]
+
+exports.pluck = function (collection, propertyName) {
+  var pluckedArray = [];
+
+  this.each(collection, function (item, index, list) {
+    pluckedArray.push(item[propertyName]);
+  });
+
+  return pluckedArray;
 };

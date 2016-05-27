@@ -327,3 +327,28 @@ describe('#map()', function () {
     expect(_.map(arrayCollection, mapFn)).to.deep.equal([3, 6, 9, 12]);
   });
 });
+
+describe('#pluck()', function () {
+  it('should exist', function () {
+    expect(_).to.respondTo('pluck');
+  });
+
+  it('should return an empty array on invalid collection', function () {
+    expect(_.pluck()).to.deep.equal([]);
+    expect(_.pluck(false)).to.deep.equal([]);
+    expect(_.pluck(undefined)).to.deep.equal([]);
+    expect(_.pluck(null)).to.deep.equal([]);
+    expect(_.pluck('string')).to.deep.equal([]);
+    expect(_.pluck(1)).to.deep.equal([]);
+  });
+
+  it('should return an array filled with undefined values if it is not an object collection', function () {
+    expect(_.pluck(arrayCollection)).to.deep.equal([undefined, undefined, undefined, undefined]);
+  });
+
+  it('should return an array with a list of property values', function () {
+    var people = [{name: 'moe', age: 40}, {name: 'larry', age: 50}, {name: 'curly', age: 60}];
+    expect(_.pluck(people, 'name')).to.deep.equal(['moe', 'larry', 'curly']);
+    expect(_.pluck(people, 'age')).to.deep.equal([40, 50, 60]);
+  });
+});
