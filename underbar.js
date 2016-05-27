@@ -31,6 +31,8 @@ exports.first = function (array, length) {
     throw new Error('Invalid Parameter');
   }
 
+  array = array.slice();
+
   if (length > 1) {
     var elements = [];
 
@@ -57,6 +59,8 @@ exports.last = function (array, length) {
   if (!Array.isArray(array)) {
     throw new Error('Invalid Parameter');
   }
+
+  array = array.slice();
 
   if (length > 1) {
     var elements = [];
