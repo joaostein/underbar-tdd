@@ -142,3 +142,22 @@ exports.filter = function (collection, predicate) {
 
   return filteredCollection;
 };
+
+// _.reject(list, predicate, [context])
+// Returns the values in list without the elements that the truth test (predicate)
+// passes. The opposite of filter.
+
+// var odds = _.reject([1, 2, 3, 4, 5, 6], function(num){ return num % 2 == 0; });
+// => [1, 3, 5]
+
+exports.reject = function (collection, predicate) {
+  var filteredCollection = [];
+
+  this.each(collection, function (item) {
+    if (!predicate(item)) {
+      filteredCollection.push(item);
+    }
+  });
+
+  return filteredCollection;
+};
