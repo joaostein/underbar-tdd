@@ -22,7 +22,7 @@ exports.identity = function (value) {
 // _.first(array, [n])
 //
 // Returns the first element of an array. Passing n will return the first n elements of the array.
-
+//
 // _.first([5, 4, 3, 2, 1]);
 // => 5
 
@@ -47,9 +47,9 @@ exports.first = function (array, length) {
 };
 
 // _.last(array, [n])
- //
+//
 // Returns the last element of an array. Passing n will return the last n elements of the array.
-
+//
 // _.last([5, 4, 3, 2, 1]);
 // => 1
 
@@ -80,7 +80,7 @@ exports.last = function (array, length) {
 // of iteratee is called with three arguments: (element, index, list). If list is a
 // JavaScript object, iteratee's arguments will be (value, key, list).
 // Returns the list for chaining.
-
+//
 // _.each([1, 2, 3], alert);
 // => alerts each number in turn...
 // _.each({one: 1, two: 2, three: 3}, alert);
@@ -102,7 +102,7 @@ exports.each = function (list, cb) {
 //
 // Returns the index at which value can be found in the array, or -1 if value
 // is not present in the array.
-
+//
 // _.indexOf([1, 2, 3], 2);
 // => 1
 
@@ -127,7 +127,7 @@ exports.indexOf = function (array, value) {
 //
 // Looks through each value in the list, returning an array of all the values
 // that pass a truth test (predicate).
-
+//
 // var evens = _.filter([1, 2, 3, 4, 5, 6], function(num){ return num % 2 == 0; });
 // => [2, 4, 6]
 
@@ -136,9 +136,10 @@ exports.filter = function (collection, predicate) {
 };
 
 // _.reject(list, predicate)
+//
 // Returns the values in list without the elements that the truth test (predicate)
 // passes. The opposite of filter.
-
+//
 // var odds = _.reject([1, 2, 3, 4, 5, 6], function(num){ return num % 2 == 0; });
 // => [1, 3, 5]
 
@@ -164,9 +165,10 @@ exports._filter = function (collection, predicate, operation) {
 };
 
 // _.uniq(array)
+//
 // Produces a duplicate-free version of the array, using === to test object equality.
 // In particular only the first occurence of each value is kept.
-
+//
 // _.uniq([1, 2, 1, 4, 1, 3]);
 // => [1, 2, 4, 3]
 
@@ -184,4 +186,30 @@ exports.uniq = function (collection) {
   });
 
   return uniq;
+};
+
+// _.map(list, iteratee, [context])
+//
+// Produces a new array of values by mapping each value in list through
+// a transformation function (iteratee). The iteratee is passed three arguments:
+// the value, then the index (or key) of the iteration, and finally a reference
+// to the entire list.
+//
+// _.map([1, 2, 3], function(num){ return num * 3; });
+// => [3, 6, 9]
+//
+// _.map({one: 1, two: 2, three: 3}, function(num, key){ return num * 3; });
+// => [3, 6, 9]
+//
+// _.map([[1, 2], [3, 4]], _.first);
+// => [1, 3]
+
+exports.map = function (collection, iteratee) {
+  var mappedArray = [];
+
+  this.each(collection, function (item, index, list) {
+    mappedArray.push(iteratee(item, index, list));
+  });
+
+  return mappedArray;
 };

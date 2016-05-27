@@ -287,3 +287,43 @@ describe('#uniq()', function () {
     expect(uniq).to.deep.equal(['str', null, undefined, false, 'str3']);
   });
 });
+
+describe('#map()', function () {
+  var mapFn = function (item) {
+    return item * 3;
+  };
+
+  it('should exist', function () {
+    expect(_).to.respondTo('map');
+  });
+
+  it('should return an empty array on invalid collection', function () {
+    expect(_.map()).to.deep.equal([]);
+    expect(_.map(false)).to.deep.equal([]);
+    expect(_.map(undefined)).to.deep.equal([]);
+    expect(_.map(null)).to.deep.equal([]);
+    expect(_.map('string')).to.deep.equal([]);
+    expect(_.map(1)).to.deep.equal([]);
+  });
+
+  it('should execute the iteratee callback function for each item in array', function () {
+    _.map(arrayCollection, spy);
+    expect(spy.callCount).to.equal(arrayCollection.length);
+    spy.reset();
+  });
+
+  it('should execute the iteratee callback function for each item in object', function () {
+    _.map(objectCollection, spy);
+    expect(spy.callCount).to.equal(Object.keys(objectCollection).length);
+    spy.reset();
+  });
+
+  it('should return an array with modified elements using an array collection', function () {
+    expect(_.map(arrayCollection, mapFn)).to.deep.equal([3, 6, 9, 12]);
+    expect(_.map([[1, 2], [3, 4]], _.first)).to.deep.equal([1, 3]);
+  });
+
+  it('should return an array with modified elements using an object collection', function () {
+    expect(_.map(arrayCollection, mapFn)).to.deep.equal([3, 6, 9, 12]);
+  });
+});
