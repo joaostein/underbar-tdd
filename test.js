@@ -346,4 +346,88 @@ describe('Collections', function () {
       expect(_.reject(objectCollection, predicate1)).to.deep.equal([1, 2]);
     });
   });
+
+  describe('#reduce()', function () {
+    it('should exist', function () {
+      expect(_).to.respondTo('reduce');
+    });
+
+    it('should accept initial memo value', function () {
+      var reducedValue = _.reduce(arrayCollection, function (memo, num) {
+        return memo + num;
+      }, 10);
+
+      expect(reducedValue).to.equal(20);
+    });
+
+    it('should skip first element if memo not provided', function () {
+      _.reduce(arrayCollection, spy);
+      expect(spy.callCount).to.equal(arrayCollection.length - 1);
+      spy.reset();
+    });
+
+    it('should use first element as memo when memo is not provided', function () {
+      var argumentList = [];
+
+      _.reduce(arrayCollection, function (memo, num, index, list) {
+        argumentList.push(memo);
+      });
+
+      expect(argumentList[0]).to.equal(1);
+    });
+
+    it('should not skip first element if initial memo is zero', function () {
+      _.reduce(arrayCollection, spy, 0);
+      expect(spy.callCount).to.equal(arrayCollection.length);
+      spy.reset();
+    });
+
+    it('should invoke iteratee function for each item in list', function () {
+      _.reduce(arrayCollection, spy, 1);
+      expect(spy.callCount).to.equal(arrayCollection.length);
+      spy.reset();
+    });
+
+    it('should pass correct arguments to iteratee function', function () {
+      var argumentList = [];
+
+      _.reduce(arrayCollection, function (memo, num, index, list) {
+        argumentList.push([memo, num, index, list]);
+        return memo + num;
+      }, 0);
+
+      expect(argumentList[0]).to.deep.equal([0, 1, 0, arrayCollection]);
+      expect(argumentList[1]).to.deep.equal([1, 2, 1, arrayCollection]);
+      expect(argumentList[2]).to.deep.equal([3, 3, 2, arrayCollection]);
+      expect(argumentList[3]).to.deep.equal([6, 4, 3, arrayCollection]);
+    });
+
+    it('should pass correct arguments to iteratee function when memo not provided', function () {
+      var argumentList = [];
+
+      _.reduce(arrayCollection, function (memo, num, index, list) {
+        argumentList.push([memo, num, index, list]);
+        return memo + num;
+      });
+
+      expect(argumentList[0]).to.deep.equal([1, 2, 0, arrayCollection]);
+      expect(argumentList[1]).to.deep.equal([3, 3, 1, arrayCollection]);
+      expect(argumentList[2]).to.deep.equal([6, 4, 2, arrayCollection]);
+    });
+
+    it('should reduce an array into a single value', function () {
+      var reducedValue = _.reduce(arrayCollection, function (memo, num) {
+        return memo + num;
+      });
+
+      expect(reducedValue).to.equal(10);
+    });
+
+    it('should flatten an array', function () {
+      var reducedValue = _.reduce([[0, 1], [2, 3], [4, 5]], function (memo, item, index, list) {
+        return memo.concat(item);
+      }, []);
+      expect(reducedValue).to.deep.equal([0, 1, 2, 3, 4, 5]);
+    });
+  });
 });
