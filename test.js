@@ -430,4 +430,35 @@ describe('Collections', function () {
       expect(reducedValue).to.deep.equal([0, 1, 2, 3, 4, 5]);
     });
   });
+
+  describe('#contains()', function () {
+    it('should exist', function () {
+      expect(_).to.respondTo('contains');
+    });
+
+    it('should reject invalid arguments', function () {
+      expect(function () { _.contains(); }).to.throw();
+      expect(function () { _.contains(''); }).to.throw();
+      expect(function () { _.contains(1); }).to.throw();
+      expect(function () { _.contains(false); }).to.throw();
+      expect(function () { _.contains(undefined); }).to.throw();
+      expect(function () { _.contains(null); }).to.throw();
+    });
+
+    it('should find given element in array list', function () {
+      expect(_.contains(arrayCollection, 1)).to.equal(true);
+    });
+
+    it('should return false if given element is not present in array list', function () {
+      expect(_.contains(arrayCollection, 101)).to.equal(false);
+    });
+
+    it('should find given element in object list', function () {
+      expect(_.contains(objectCollection, 1)).to.equal(true);
+    });
+
+    it('should return false if given element is not present in object list', function () {
+      expect(_.contains(objectCollection, 101)).to.equal(false);
+    });
+  });
 });

@@ -264,3 +264,26 @@ exports.reduce = function (list, iteratee, memo) {
 
   return memo;
 };
+
+// _.contains(list, value)
+//
+// Returns true if the value is present in the list.
+//
+// _.contains([1, 2, 3], 3);
+// => true
+
+exports.contains = function (list, value) {
+  if (typeof list !== 'object' || list === null) {
+    throw new Error('Invalid argument');
+  }
+
+  var found = false;
+
+  this.each(list, function (item, index) {
+    if (item === value) {
+      found = true;
+    }
+  });
+
+  return found;
+};
