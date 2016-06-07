@@ -287,3 +287,28 @@ exports.contains = function (list, value) {
 
   return found;
 };
+
+// _.every(list, [predicate], [context])
+//
+// Returns true if all of the values in the list pass the predicate truth test.
+
+// _.every([2, 4, 5], function(num) { return num % 2 == 0; });
+// => false
+
+exports.every = function (collection, predicate) {
+  if (typeof collection !== 'object' || collection === null) {
+    throw new Error('Invalid argument');
+  }
+
+  var test;
+
+  this.each(collection, function (item, index, list) {
+    if (typeof test !== undefined && test === false) {
+      return;
+    }
+
+    test = predicate(item, index, list) ? true : false;
+  });
+
+  return test;
+};

@@ -461,4 +461,59 @@ describe('Collections', function () {
       expect(_.contains(objectCollection, 101)).to.equal(false);
     });
   });
+
+  describe('#every()', function () {
+    it('should exist', function () {
+      expect(_).to.respondTo('every');
+    });
+
+    it('reject invalid arguments', function () {
+      expect(function () { _.every(); }).to.throw();
+      expect(function () { _.every(''); }).to.throw();
+      expect(function () { _.every(1); }).to.throw();
+      expect(function () { _.every(false); }).to.throw();
+      expect(function () { _.every(undefined); }).to.throw();
+      expect(function () { _.every(null); }).to.throw();
+    });
+
+    it('should execute predicate for each item on array collection', function () {
+      _.every(arrayCollection, function () { spy(); return true; });
+      expect(spy.callCount).to.equal(arrayCollection.length);
+      spy.reset();
+    });
+
+    it('should execute predicate for each item on object collection', function () {
+      _.every(objectCollection, function () { spy(); return true; });
+      expect(spy.callCount).to.equal(Object.keys(objectCollection).length);
+      spy.reset();
+    });
+
+    it('should execute predicate with correct list params on array collection', function () {
+      _.every(arrayCollection, function (item, index, list) { spy(item, index, list); return true; });
+      expect(spy.calledWith(1, 0, arrayCollection)).to.equal(true);
+      expect(spy.calledWith(2, 1, arrayCollection)).to.equal(true);
+      expect(spy.calledWith(3, 2, arrayCollection)).to.equal(true);
+      expect(spy.calledWith(4, 3, arrayCollection)).to.equal(true);
+      spy.reset();
+    });
+
+    it('should execute predicate with correct list params on object collection', function () {
+      _.every(objectCollection, function (item, index, list) { spy(item, index, list); return true; });
+      expect(spy.calledWith(1, 'item1', objectCollection)).to.equal(true);
+      expect(spy.calledWith(2, 'item2', objectCollection)).to.equal(true);
+      expect(spy.calledWith(3, 'item3', objectCollection)).to.equal(true);
+      expect(spy.calledWith(4, 'item4', objectCollection)).to.equal(true);
+      spy.reset();
+    });
+
+    it('should return true if all values passes the predicate truth test on array collection', function () {
+      expect(_.every([2, 4, 6], predicate2)).to.equal(true);
+      expect(_.every([12, 14, 16], predicate1)).to.equal(true);
+    });
+
+    it('should return false if any value does not pass the predicate truth test on array collection', function () {
+      expect(_.every([1, 4, 6], predicate2)).to.equal(false);
+      expect(_.every([0, 14, 16], predicate1)).to.equal(false);
+    });
+  });
 });
