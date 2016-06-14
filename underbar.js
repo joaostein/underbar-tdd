@@ -312,3 +312,28 @@ exports.every = function (collection, predicate) {
 
   return test;
 };
+
+// _.some(list, [predicate])
+//
+// Returns true if any of the values in the list pass the predicate truth test.
+
+// _.some([null, 0, 'yes', false]);
+// => true
+
+exports.some = function (collection, predicate) {
+  if (typeof collection !== 'object' || collection === null) {
+    throw new Error('Invalid Argument');
+  }
+
+  var test;
+
+  this.each(collection, function (item, index, list) {
+    if (test) {
+      return;
+    }
+
+    test = predicate(item, index, list) ? true : false;
+  });
+
+  return test;
+};

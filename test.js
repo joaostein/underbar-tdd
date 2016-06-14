@@ -516,4 +516,63 @@ describe('Collections', function () {
       expect(_.every([0, 14, 16], predicate1)).to.equal(false);
     });
   });
+
+  describe('#some()', function () {
+    it('should exist', function () {
+      expect(_).to.respondTo('some');
+    });
+
+    it('reject invalid arguments', function () {
+      expect(function () { _.some(); }).to.throw();
+      expect(function () { _.some(''); }).to.throw();
+      expect(function () { _.some(1); }).to.throw();
+      expect(function () { _.some(false); }).to.throw();
+      expect(function () { _.some(undefined); }).to.throw();
+      expect(function () { _.some(null); }).to.throw();
+    });
+
+    it('should execute predicate for each item on array collection', function () {
+      _.some(arrayCollection, function (item) { spy(); return item === 1; });
+      expect(spy.callCount).to.equal(1);
+      spy.reset();
+    });
+
+    it('should execute predicate for each item on object collection', function () {
+      _.some(objectCollection, function (item) { spy(); return item === 1; });
+      expect(spy.callCount).to.equal(1);
+      spy.reset();
+    });
+
+    it('should execute predicate with correct list params on array collection', function () {
+      _.some(arrayCollection, function (item, index, list) { spy(item, index, list); return item === 1; });
+      expect(spy.calledWith(1, 0, arrayCollection)).to.equal(true);
+      spy.reset();
+    });
+
+    it('should execute predicate with correct list params on object collection', function () {
+      _.some(objectCollection, function (item, index, list) { spy(item, index, list); return item === 1; });
+      expect(spy.calledWith(1, 'item1', objectCollection)).to.equal(true);
+      spy.reset();
+    });
+
+    it('should return true if at least one value passes the predicate truth test on array collection', function () {
+      expect(_.some([2, 1, 3], predicate2)).to.equal(true);
+      expect(_.some([1, 2, 16], predicate1)).to.equal(true);
+    });
+
+    it('should return false if any value does not pass the predicate truth test on array collection', function () {
+      expect(_.some([1, 3, 5], predicate2)).to.equal(false);
+      expect(_.some([0, 1, 2], predicate1)).to.equal(false);
+    });
+
+    it('should return true if at least one value passes the predicate truth test on object collection', function () {
+      expect(_.some({ a: 1, b: 2, c: 3 }, predicate2)).to.equal(true);
+      expect(_.some({ a: 1, b: 23, c: 2 }, predicate1)).to.equal(true);
+    });
+
+    it('should return false if any value does not pass the predicate truth test on object collection', function () {
+      expect(_.some({ a: 1, b: 3, c: 5 }, predicate2)).to.equal(false);
+      expect(_.some({ a: 1, b: 2, c: 0 }, predicate1)).to.equal(false);
+    });
+  });
 });
