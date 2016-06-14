@@ -515,6 +515,16 @@ describe('Collections', function () {
       expect(_.every([1, 4, 6], predicate2)).to.equal(false);
       expect(_.every([0, 14, 16], predicate1)).to.equal(false);
     });
+
+    it('should return true if all values passes the predicate truth test on object collection', function () {
+      expect(_.every({ a: 2, b: 4, c: 6 }, predicate2)).to.equal(true);
+      expect(_.every({ a: 12, b: 23, c: 21 }, predicate1)).to.equal(true);
+    });
+
+    it('should return false if all values does not pass the predicate truth test on object collection', function () {
+      expect(_.every({ a: 2, b: 3, c: 4 }, predicate2)).to.equal(false);
+      expect(_.every({ a: 21, b: 22, c: 0 }, predicate1)).to.equal(false);
+    });
   });
 
   describe('#some()', function () {
