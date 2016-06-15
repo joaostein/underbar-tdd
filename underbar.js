@@ -337,3 +337,45 @@ exports.some = function (collection, predicate) {
 
   return test;
 };
+
+// _.extend(destination, *sources)
+//
+// Copy all of the properties in the source objects over to the destination object,
+// and return the destination object. It's in-order, so the last source will
+// override properties of the same name in previous arguments.
+
+// _.extend({name: 'moe'}, {age: 50});
+// => {name: 'moe', age: 50}
+
+exports.extend = function () {
+  var args = Array.prototype.slice.call(arguments);
+
+  var destination = args[0];
+  var sources = args.slice(1);
+
+  validateArgument(destination);
+
+  this.each(sources, function (item) {
+    if (item !== undefined) {
+      validateArgument(item);
+    }
+  });
+
+  var self = this;
+
+  this.each(sources, function (item) {
+    self.each(item, addProperty);
+  });
+
+  function addProperty (value, index) {
+    destination[index] = value;
+  }
+
+  function validateArgument (item) {
+    if (typeof item !== 'object' || Array.isArray(item) || item === null) {
+      throw new Error('Invalid argument');
+    }
+  }
+
+  return destination;
+};

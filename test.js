@@ -199,6 +199,121 @@ describe('Arrays', function () {
   });
 });
 
+describe.only('Objects', function () {
+  describe('#extend()', function () {
+    it('should exist', function () {
+      expect(_).to.respondTo('extend');
+    });
+
+    it('should reject invalid arguments on destination object', function () {
+      expect(function () { _.extend(); }).to.throw();
+      expect(function () { _.extend(''); }).to.throw();
+      expect(function () { _.extend(1); }).to.throw();
+      expect(function () { _.extend(false); }).to.throw();
+      expect(function () { _.extend(undefined); }).to.throw();
+      expect(function () { _.extend([]); }).to.throw();
+      expect(function () { _.extend(null); }).to.throw();
+    });
+
+    it('should reject invalid arguments on source object', function () {
+      expect(function () { _.extend({}, ''); }).to.throw();
+      expect(function () { _.extend({}, 1); }).to.throw();
+      expect(function () { _.extend({}, false); }).to.throw();
+      expect(function () { _.extend({}, []); }).to.throw();
+      expect(function () { _.extend({}, null); }).to.throw();
+    });
+
+    it('should return the same object if no source was given', function () {
+      var obj = {};
+      var objWithKeys = { a: 1, b: 2 };
+
+      expect(_.extend(obj)).to.deep.equal(obj);
+      expect(_.extend(objWithKeys)).to.deep.equal(objWithKeys);
+    });
+
+    it('should extend the destination object with a single key:value pair', function () {
+      var destination = {};
+      var source = { a: 1 };
+
+      var extendedObject = _.extend(destination, source);
+
+      expect(extendedObject).to.equal(destination);
+      expect(extendedObject.a).to.equal(1);
+    });
+
+    it('should extend the destination object with a multiple key:value pairs', function () {
+      var destination = {};
+      var source = { a: 1, b: 2 };
+
+      var extendedObject = _.extend(destination, source);
+
+      expect(extendedObject).to.equal(destination);
+      expect(extendedObject.a).to.equal(1);
+      expect(extendedObject.b).to.equal(2);
+    });
+
+    it('should override the destination object with a single key:value pair present on source', function () {
+      var destination = { a: 'a' };
+      var source = { a: 1 };
+
+      var extendedObject = _.extend(destination, source);
+
+      expect(extendedObject).to.equal(destination);
+      expect(extendedObject.a).to.equal(1);
+    });
+
+    it('should override the destination object with a multiple key:value pairs present on source', function () {
+      var destination = { a: 'a', b: 'b' };
+      var source = { a: 1, b: 2 };
+
+      var extendedObject = _.extend(destination, source);
+
+      expect(extendedObject).to.equal(destination);
+      expect(extendedObject.a).to.equal(1);
+      expect(extendedObject.b).to.equal(2);
+    });
+
+    it('should preserve properties on destination that are not present on source', function () {
+      var destination = { j: 's', b: 'b' };
+      var source = { a: 1, b: 2 };
+
+      var extendedObject = _.extend(destination, source);
+
+      expect(extendedObject).to.equal(destination);
+      expect(extendedObject.a).to.equal(1);
+      expect(extendedObject.b).to.equal(2);
+      expect(extendedObject.j).to.equal('s');
+    });
+
+    it('should accept multiple sources', function () {
+      var destination = {};
+      var source1 = { a: 1, b: 2 };
+      var source2 = { a: 11, b: 22 };
+
+      var extendedObject = _.extend(destination, source1, source2);
+
+      expect(extendedObject).to.equal(destination);
+      expect(extendedObject.a).to.equal(11);
+      expect(extendedObject.b).to.equal(22);
+    });
+
+    it('should preseve a mix of destination and multiple sources values', function () {
+      var destination = { a: false, j: 's', };
+      var source1 = { a: 1, b: 2, c: 33 };
+      var source2 = { a: 11, b: 22, d: 44 };
+
+      var extendedObject = _.extend(destination, source1, source2);
+
+      expect(extendedObject).to.equal(destination);
+      expect(extendedObject.a).to.equal(11);
+      expect(extendedObject.b).to.equal(22);
+      expect(extendedObject.c).to.equal(33);
+      expect(extendedObject.d).to.equal(44);
+      expect(extendedObject.j).to.equal('s');
+    });
+  });
+});
+
 describe('Collections', function () {
   describe('#each()', function () {
     afterEach(function () {
