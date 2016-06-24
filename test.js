@@ -199,7 +199,7 @@ describe('Arrays', function () {
   });
 });
 
-describe.only('Objects', function () {
+describe('Objects', function () {
   describe('#extend()', function () {
     it('should exist', function () {
       expect(_).to.respondTo('extend');
@@ -310,6 +310,51 @@ describe.only('Objects', function () {
       expect(extendedObject.c).to.equal(33);
       expect(extendedObject.d).to.equal(44);
       expect(extendedObject.j).to.equal('s');
+    });
+  });
+
+  describe('#defaults()', function () {
+    it('should exist', function () {
+      expect(_).to.respondTo('defaults');
+    });
+
+    it('should reject invalid arguments on source object', function () {
+      expect(function () { _.defaults(); }).to.throw();
+      expect(function () { _.defaults(''); }).to.throw();
+      expect(function () { _.defaults(1); }).to.throw();
+      expect(function () { _.defaults(false); }).to.throw();
+      expect(function () { _.defaults(undefined); }).to.throw();
+      expect(function () { _.defaults([]); }).to.throw();
+      expect(function () { _.defaults(null); }).to.throw();
+    });
+
+    it('should reject invalid arguments on defaults object', function () {
+      expect(function () { _.defaults({}, ''); }).to.throw();
+      expect(function () { _.defaults({}, 1); }).to.throw();
+      expect(function () { _.defaults({}, false); }).to.throw();
+      expect(function () { _.defaults({}, []); }).to.throw();
+      expect(function () { _.defaults({}, null); }).to.throw();
+      expect(function () { _.defaults({}, undefined); }).to.throw();
+    });
+
+    it('should preserve object properties when defaults is empty', function () {
+      var result = _.defaults({ a: 'a' }, {});
+      expect(result).to.deep.equal({ a: 'a' });
+    });
+
+    it('should preserve object properties when defaults is defined', function () {
+      var result = _.defaults({ a: 'a' }, { a: 'b' });
+      expect(result).to.deep.equal({ a: 'a' });
+    });
+
+    it('should set default properties on object when it is not current set', function () {
+      var result = _.defaults({ a: 'a' }, { b: 'b' });
+      expect(result).to.deep.equal({ a: 'a', b: 'b' });
+    });
+
+    it('should set default properties on object and respect the ones defined', function () {
+      var result = _.defaults({ a: 'a' }, { a: 'x', b: 'b' });
+      expect(result).to.deep.equal({ a: 'a', b: 'b' });
     });
   });
 });

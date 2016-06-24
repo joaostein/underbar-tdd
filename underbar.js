@@ -379,3 +379,31 @@ exports.extend = function () {
 
   return destination;
 };
+
+// _.defaults(object, defaults)
+//
+// Fill in undefined properties in object with the first value present in
+// the following list of defaults objects.
+
+// var iceCream = {flavor: "chocolate"};
+// _.defaults(iceCream, {flavor: "vanilla", sprinkles: "lots"});
+// => {flavor: "chocolate", sprinkles: "lots"}
+
+exports.defaults = function (sourceObj, defaultsObj) {
+  validateArgument(sourceObj);
+  validateArgument(defaultsObj);
+
+  this.each(defaultsObj, function (item, key, collection) {
+    if (!sourceObj[key]) {
+      sourceObj[key] = defaultsObj[key];
+    }
+  });
+
+  return sourceObj;
+
+  function validateArgument (param) {
+    if (typeof param !== 'object' || Array.isArray(param) || param === null) {
+      throw new Error('Invalid argument');
+    }
+  }
+};
