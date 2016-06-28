@@ -407,3 +407,32 @@ exports.defaults = function (sourceObj, defaultsObj) {
     }
   }
 };
+
+// _.once(function)
+//
+// Creates a version of the function that can only be called one time.
+// Repeated calls to the modified function will have no effect, returning
+// the value from the original call. Useful for initialization functions,
+// instead of having to set a boolean flag and then check it later.
+
+// var initialize = _.once(createApplication);
+// initialize();
+// initialize();
+// Application is only created once.
+
+exports.once = function (fn) {
+  if (typeof fn !== 'function') {
+    throw new Error('Invalid Argument.  It must be a function!');
+  }
+
+  var called = false;
+
+  return function () {
+    var args = Array.prototype.slice.call(arguments);
+
+    if (!called) {
+      fn.apply(this, args);
+      called = true;
+    }
+  };
+};

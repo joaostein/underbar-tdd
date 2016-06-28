@@ -746,3 +746,44 @@ describe('Collections', function () {
     });
   });
 });
+
+describe('Functions', function () {
+  describe('#once()', function () {
+    it('should exist', function () {
+      expect(_).to.respondTo('once');
+    });
+
+    it('should reject invalid arguments', function () {
+      expect(function () { _.once(); }).to.throw();
+      expect(function () { _.once('string'); }).to.throw();
+      expect(function () { _.once(1); }).to.throw();
+      expect(function () { _.once(false); }).to.throw();
+      expect(function () { _.once(null); }).to.throw();
+      expect(function () { _.once(undefined); }).to.throw();
+      expect(function () { _.once([]); }).to.throw();
+      expect(function () { _.once({}); }).to.throw();
+    });
+
+    it('should invoke the given function', function () {
+      var onceFn = _.once(spy);
+      onceFn();
+      expect(spy.called).to.equal(true);
+      spy.reset();
+    });
+
+    it('should invoke the given function only once', function () {
+      var onceFn = _.once(spy);
+      onceFn();
+      onceFn();
+      expect(spy.callCount).to.equal(1);
+      spy.reset();
+    });
+
+    it('should handle passing arguments', function () {
+      var onceFn = _.once(spy);
+      onceFn(1, 0, 1);
+      expect(spy.calledWith(1, 0, 1)).to.equal(true);
+      spy.reset();
+    });
+  });
+});
