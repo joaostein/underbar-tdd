@@ -786,4 +786,127 @@ describe('Functions', function () {
       spy.reset();
     });
   });
+
+  describe('#memoize()', function () {
+    var sum = function (a, b) {
+      return a + b;
+    };
+
+    var identity = function (a) {
+      return a;
+    };
+
+    it('should exist', function () {
+      expect(_).to.respondTo('memoize');
+    });
+
+    it('should reject invalid arguments', function () {
+      expect(function () { _.memoize(); }).to.throw();
+      expect(function () { _.memoize(''); }).to.throw();
+      expect(function () { _.memoize(1); }).to.throw();
+      expect(function () { _.memoize(false); }).to.throw();
+      expect(function () { _.memoize(null); }).to.throw();
+      expect(function () { _.memoize(undefined); }).to.throw();
+      expect(function () { _.memoize([]); }).to.throw();
+      expect(function () { _.memoize({}); }).to.throw();
+    });
+
+    it('should return a function', function () {
+      var memo = _.memoize(function () {});
+      expect(memo).to.be.a('function');
+    });
+
+    it('should return a memoized version of given function', function () {
+      var memo = _.memoize(spy);
+      memo();
+      expect(spy.called).to.equal(true);
+      spy.reset();
+    });
+
+    it('should add a cache object property on returned function', function () {
+      var memo = _.memoize(function () {});
+      expect(memo.cache).to.be.an('object');
+    });
+
+    it('should memoize function with single argument', function () {
+      var memo = _.memoize(identity);
+      expect(memo(1)).to.equal(1);
+    });
+
+    it('should memoize function with multiple arguments', function () {
+      var memo = _.memoize(sum);
+      expect(memo(1, 2)).to.equal(3);
+    });
+
+    it('should cache the return value if not cached already for single argument', function () {
+      var spy = sinon.spy(identity);
+      var memo = _.memoize(spy);
+
+      expect(memo(1)).to.equal(1);
+      expect(spy.callCount).to.equal(1);
+      expect(memo.cache).to.have.any.keys('1');
+      expect(memo.cache['1']).to.equal(1);
+
+      expect(memo(1)).to.equal(1);
+      expect(memo(1)).to.equal(1);
+      expect(memo(1)).to.equal(1);
+      expect(spy.callCount).to.equal(1);
+    });
+
+    it('should cache the return value if not cached already for multiple arguments', function () {
+      var spy = sinon.spy(sum);
+      var memo = _.memoize(spy);
+
+      expect(memo(1, 2)).to.equal(3);
+      expect(spy.callCount).to.equal(1);
+      expect(memo.cache).to.have.any.keys('1, 2');
+      expect(memo.cache['1, 2']).to.equal(3);
+
+      expect(memo(1, 2)).to.equal(3);
+      expect(memo(1, 2)).to.equal(3);
+      expect(memo(1, 2)).to.equal(3);
+      expect(spy.callCount).to.equal(1);
+    });
+
+    it('should cache correctly value given complex arguments', function () {
+      var complexFunction = function (a, b, fn, obj) {
+        return [a, b, fn(), obj];
+      };
+
+      var spy = sinon.spy(complexFunction);
+      var memo = _.memoize(spy);
+
+      // first complex expectation
+      var firstExpectedArgs = [undefined, true, function () { return 1; }, { a: 'a', b: 'b'}];
+      var firstExpectedResult = [undefined, true, 1, { a: 'a', b: 'b' }];
+      var firstExpectedHashIdentifier = 'undefined, true, function () { return 1; }, {"a":"a","b":"b"}';
+
+      var firstExpectation = memo(firstExpectedArgs[0], firstExpectedArgs[1], firstExpectedArgs[2], firstExpectedArgs[3]);
+      memo(firstExpectedArgs[0], firstExpectedArgs[1], firstExpectedArgs[2], firstExpectedArgs[3]);
+      memo(firstExpectedArgs[0], firstExpectedArgs[1], firstExpectedArgs[2], firstExpectedArgs[3]);
+
+      expect(firstExpectation).to.deep.equal(firstExpectedResult);
+      expect(memo.cache[firstExpectedHashIdentifier]).to.deep.equal(firstExpectedResult);
+      expect(spy.callCount).to.equal(1);
+
+      spy.reset();
+
+      // second complex expectation
+      var fn = function () { console.log(101); };
+
+      var secondExpectedArgs = [[1,2,3], null, function () { return 1; }, { a: 'a', 'b': fn }];
+      var secondExpectedResult = [[1,2,3], null, 1, { a: 'a', 'b': fn }];
+      var secondExpectedHashIdentifier = '[1,2,3], null, function () { return 1; }, {"a":"a","b":"function () { console.log(101); }"}';
+
+      var secondExpectation = memo(secondExpectedArgs[0], secondExpectedArgs[1], secondExpectedArgs[2], secondExpectedArgs[3]);
+      memo(secondExpectedArgs[0], secondExpectedArgs[1], secondExpectedArgs[2], secondExpectedArgs[3]);
+      memo(secondExpectedArgs[0], secondExpectedArgs[1], secondExpectedArgs[2], secondExpectedArgs[3]);
+
+      expect(secondExpectation).to.deep.equal(secondExpectedResult);
+      expect(memo.cache[secondExpectedHashIdentifier]).to.deep.equal(secondExpectedResult);
+      expect(spy.callCount).to.equal(1);
+
+      spy.reset();
+    });
+  });
 });

@@ -436,3 +436,73 @@ exports.once = function (fn) {
     }
   };
 };
+
+// _.memoize(function)
+//
+// Memoizes a given function by caching the computed result. Useful for
+// speeding up slow-running computations. The cache of memoized values
+// is available as the cache property on the returned function.
+
+// var fibonacci = _.memoize(function(n) {
+//   return n < 2 ? n: fibonacci(n - 1) + fibonacci(n - 2);
+// });
+
+exports.memoize = function (fn) {
+  if (typeof fn !== 'function') {
+    throw new Error('Invalid Argument.  It must be a function!');
+  }
+
+  var self = this;
+  memoizedFunction.cache = {};
+
+  return memoizedFunction;
+
+  function memoizedFunction () {
+    var args = Array.prototype.slice.call(arguments);
+    var hash = getHash(args);
+    var cache = memoizedFunction.cache;
+
+    return (cache[hash] = cache[hash] ? cache[hash] : fn.apply(self, args));
+  }
+
+  function getHash (args) {
+    var argsArray = args.slice();
+    var hash = '';
+    var stringifiedArgument;
+
+    self.each(argsArray, function (argument, index, collection) {
+      stringifiedArgument = stringifyArgument(argument);
+      hash += isLast(index, collection) ? stringifiedArgument : stringifiedArgument + ', ';
+    });
+
+    return hash;
+  }
+
+  function stringifyArgument (argument) {
+    var stringifiedArgument;
+
+    if (typeof argument === 'object' && !Array.isArray(argument) && argument !== null) {
+      var stringifiedObject = {};
+
+      for (var key in argument) {
+        stringifiedObject[key] = stringifyArgument(argument[key]);
+      }
+
+      stringifiedArgument = JSON.stringify(stringifiedObject);
+    }
+
+    else if (Array.isArray(argument)) {
+      stringifiedArgument = JSON.stringify(argument);
+    }
+
+    else {
+      stringifiedArgument = argument += '';
+    }
+
+    return stringifiedArgument;
+  }
+
+  function isLast (index, collection) {
+    return index === collection.length - 1;
+  }
+};
