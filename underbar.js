@@ -532,3 +532,37 @@ exports.delay = function () {
     callback.apply(this, args);
   }, delay);
 };
+
+// _.shuffle(list)
+//
+// Returns a shuffled copy of the list, using a version of the Fisher-Yates shuffle.
+
+// _.shuffle([1, 2, 3, 4, 5, 6]);
+// => [4, 1, 6, 3, 5, 2]
+
+exports.shuffle = function (list) {
+  if (!Array.isArray(list)) {
+    throw new TypeError('Invalid argument');
+  }
+
+  return fisherYatesShuffle(list.slice());
+
+  function fisherYatesShuffle (list) {
+    var currentIndex = list.length, temporaryValue, randomIndex;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+
+      // And swap it with the current element.
+      temporaryValue = list[currentIndex];
+      list[currentIndex] = list[randomIndex];
+      list[randomIndex] = temporaryValue;
+    }
+
+    return list;
+  }
+};

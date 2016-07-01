@@ -745,6 +745,30 @@ describe('Collections', function () {
       expect(_.some({ a: 1, b: 2, c: 0 }, predicate1)).to.equal(false);
     });
   });
+
+  describe('#shuffle()', function () {
+    it('should exist', function () {
+      expect(_).to.respondTo('shuffle');
+    });
+
+    it('should reject invalid arguments', function () {
+      expect(function () { _.shuffle(); }).to.throw();
+      expect(function () { _.shuffle(''); }).to.throw();
+      expect(function () { _.shuffle(1); }).to.throw();
+      expect(function () { _.shuffle(false); }).to.throw();
+      expect(function () { _.shuffle(null); }).to.throw();
+      expect(function () { _.shuffle(undefined); }).to.throw();
+      expect(function () { _.shuffle({}); }).to.throw();
+    });
+
+    it('should return a copy of the original array', function () {
+      var originalArray = [1, 2, 3, 4, 5];
+      var shuffledArray = _.shuffle(originalArray);
+      expect(shuffledArray).to.be.an('array');
+      expect(shuffledArray.length).to.equal(originalArray.length);
+      expect(shuffledArray).to.not.equal(originalArray);
+    });
+  });
 });
 
 describe('Functions', function () {
