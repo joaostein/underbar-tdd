@@ -506,3 +506,29 @@ exports.memoize = function (fn) {
     return index === collection.length - 1;
   }
 };
+
+// _.delay(function, wait, *arguments)
+//
+// Much like setTimeout, invokes function after wait milliseconds.
+// If you pass the optional arguments, they will be forwarded on to
+// the function when it is invoked.
+
+// var log = _.bind(console.log, console);
+// _.delay(log, 1000, 'logged later');
+// => 'logged later' // Appears after one second.
+
+exports.delay = function () {
+  var args = Array.prototype.slice.call(arguments);
+
+  var callback = args.shift();
+  var delay = args.shift();
+  var self = this;
+
+  if (typeof callback !== 'function' || typeof delay !== 'number') {
+    throw new Error('Invalid argument');
+  }
+
+  setTimeout(function () {
+    callback.apply(this, args);
+  }, delay);
+};

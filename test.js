@@ -909,4 +909,60 @@ describe('Functions', function () {
       spy.reset();
     });
   });
+
+  describe('#delay()', function () {
+    it('should exist', function () {
+      expect(_).to.respondTo('delay');
+    });
+
+    it('should handle invalid callback function argument', function () {
+      expect(function () { _.delay(); }).to.throw();
+      expect(function () { _.delay(''); }).to.throw();
+      expect(function () { _.delay(1); }).to.throw();
+      expect(function () { _.delay(false); }).to.throw();
+      expect(function () { _.delay([]); }).to.throw();
+      expect(function () { _.delay({}); }).to.throw();
+      expect(function () { _.delay(null); }).to.throw();
+      expect(function () { _.delay(undefined); }).to.throw();
+    });
+
+    it('should handle invalid wait time argument', function () {
+      var callback = function () {};
+      expect(function () { _.delay(callback); }).to.throw();
+      expect(function () { _.delay(callback, ''); }).to.throw();
+      expect(function () { _.delay(callback, false); }).to.throw();
+      expect(function () { _.delay(callback, []); }).to.throw();
+      expect(function () { _.delay(callback, {}); }).to.throw();
+      expect(function () { _.delay(callback, null); }).to.throw();
+      expect(function () { _.delay(callback, undefined); }).to.throw();
+    });
+
+    it('should invoke the callback fuction respecting given delay time', function () {
+      var clock = sinon.useFakeTimers();
+      _.delay(spy, 100);
+      expect(spy.called).to.equal(false);
+      clock.tick(100);
+      expect(spy.called).to.equal(true);
+      clock.restore();
+      spy.reset();
+    });
+
+    it('should accept single optional argument that will be passed to callback function', function () {
+      var clock = sinon.useFakeTimers();
+      _.delay(spy, 101, 'test');
+      clock.tick(101);
+      expect(spy.calledWith('test')).to.equal(true);
+      clock.restore();
+      spy.reset();
+    });
+
+    it('should accept multiple optional arguments that will be passed to callback function', function () {
+      var clock = sinon.useFakeTimers();
+      _.delay(spy, 101, 'test', 1, '0', 1);
+      clock.tick(101);
+      expect(spy.calledWith('test', 1, '0', 1)).to.equal(true);
+      clock.restore();
+      spy.reset();
+    });
+  });
 });
